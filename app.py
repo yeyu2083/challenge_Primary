@@ -40,6 +40,56 @@ def insert_pedidos_list():
             error_count += 1
             errores.append(f"Faltan los campos: {', '.join(missing_fields)} en el pedido: {pedido.get('idPedido', 'sin ID')}")
             continue
+        if not isinstance(pedido['numCliente'], int):
+            error_count += 1
+            errores.append(f"El campo 'numCliente' debe ser un número entero en el pedido: {pedido.get('idPedido', 'sin ID')}")
+            continue
+        
+        if not isinstance(pedido['codProducto'], str):
+            error_count += 1
+            errores.append(f"El campo 'codProducto' debe ser un string en el pedido: {pedido.get('idPedido', 'sin ID')}")
+            continue
+        
+        if not isinstance(pedido['codTipoSolicitud'], str) or pedido['codTipoSolicitud'] not in ['V', 'C']:
+            error_count += 1
+            errores.append(f"El campo 'codTipoSolicitud' debe ser 'V' o 'C' en el pedido: {pedido.get('idPedido', 'sin ID')}")
+            continue
+
+        if not isinstance(pedido['importe'], (float, int)):
+            error_count += 1
+            errores.append(f"El campo 'importe' debe ser un decimal en el pedido: {pedido.get('idPedido', 'sin ID')}")
+            continue
+        
+        if not isinstance(pedido['esTotal'], bool):
+            error_count += 1
+            errores.append(f"El campo 'esTotal' debe ser un booleano en el pedido: {pedido.get('idPedido', 'sin ID')}")
+            continue
+        
+        if not isinstance(pedido['idFormaPago'], str):
+            error_count += 1
+            errores.append(f"El campo 'idFormaPago' debe ser un string en el pedido: {pedido.get('idPedido', 'sin ID')}")
+            continue
+        
+        if not isinstance(pedido['idPedido'], str):
+            error_count += 1
+            errores.append(f"El campo 'idPedido' debe ser un string en el pedido: {pedido.get('idPedido', 'sin ID')}")
+            continue
+        
+        if not isinstance(pedido['requiereAutorizacion'], bool):
+            error_count += 1
+            errores.append(f"El campo 'requiereAutorizacion' debe ser un booleano en el pedido: {pedido.get('idPedido', 'sin ID')}")
+            continue
+
+       
+        if 'fechaPedido' in pedido:
+            try:
+                datetime.strptime(pedido['fechaPedido'], "%Y-%m-%d")
+            except ValueError:
+                error_count += 1
+                errores.append(f"El campo 'fechaPedido' debe ser una fecha válida en el pedido: {pedido.get('idPedido', 'sin ID')}")
+                continue
+        
+      
         process_count += 1
         
     response = {

@@ -1,0 +1,289 @@
+{
+	"info": {
+		"_postman_id": "a6eca1a4-dfc9-40cd-8ff9-1b118df42a2f",
+		"name": "Challenge_Primary",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "29736505",
+		"_collection_link": "https://martian-flare-423708.postman.co/workspace/Team-Workspace~c0070543-a08e-487a-8913-6cb29c7b8180/collection/29736505-a6eca1a4-dfc9-40cd-8ff9-1b118df42a2f?action=share&source=collection_link&creator=29736505"
+	},
+	"item": [
+		{
+			"name": "Test Case: Validar Successful Pedido Insertion",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const body = pm.response.json()\r",
+							"\r",
+							"\r",
+							"pm.test(\"Status code is 200\", () => {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test('Validar si el Response contiene CantidadOperacionesProcesadas 1 y 0 errores', () => {\r",
+							"    pm.expect(body.cantidadOperacionesProcesadas).to.equal(1);\r",
+							"    pm.expect(body.cantidadErrores).to.equal(0);\r",
+							"  \r",
+							"})\r",
+							"\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "\r\n  {\r\n    \"numCliente\": 12345,\r\n    \"codProducto\": \"PROD001\",\r\n    \"codTipoSolicitud\": \"V\",\r\n    \"importe\": 1000.50,\r\n    \"esTotal\": false,\r\n    \"idFormaPago\": \"CB\",\r\n    \"idPedido\": \"PED001\",\r\n    \"requiereAutorizacion\": false,\r\n    \"fechaPedido\": \"2024-10-14\",\r\n    \"origen\": \"WEB\"\r\n  }\r\n\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/api/negocio/v10/insert-pedidos-list",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"negocio",
+						"v10",
+						"insert-pedidos-list"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Test Case: Validar Missing Required Field",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const body = pm.response.json()\r",
+							"\r",
+							"\r",
+							"pm.test(\"Status code is 400\", () => {\r",
+							"    pm.response.to.have.status(400);\r",
+							"});\r",
+							"\r",
+							"pm.test('Validar el mensaje que dice que el parametro numCliente es requerido', () => {\r",
+							"       pm.expect(body.cantidadOperacionesProcesadas).to.equal(0);\r",
+							"    pm.expect(body.cantidadErrores).to.equal(1);\r",
+							"    pm.expect(body.errores).to.contain('Faltan los campos: numCliente en el pedido: PED001');\r",
+							"   \r",
+							"})\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "\r\n  {\r\n    \"codProducto\": \"PROD001\",\r\n    \"codTipoSolicitud\": \"V\",\r\n    \"importe\": 1000.50,\r\n    \"esTotal\": false,\r\n    \"idFormaPago\": \"CB\",\r\n    \"idPedido\": \"PED001\",\r\n    \"requiereAutorizacion\": false,\r\n    \"fechaPedido\": \"2024-10-14\",\r\n    \"origen\": \"WEB\"\r\n  }\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/api/negocio/v10/insert-pedidos-list",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"negocio",
+						"v10",
+						"insert-pedidos-list"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Test Case: Validar Invalid Data Type",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const body = pm.response.json()\r",
+							"\r",
+							"\r",
+							"pm.test(\"Status code is 400\", () => {\r",
+							"    pm.response.to.have.status(400);\r",
+							"});\r",
+							"\r",
+							"pm.test('Validar tipos de datos', () => {\r",
+							"    pm.expect(body.idProceso).to.be.a('string');\r",
+							"    pm.expect(body.cantidadErrores).to.be.a('number');\r",
+							"    pm.expect(body.cantidadOperacionesProcesadas).to.be.a('number');\r",
+							"    pm.expect(body.errores).to.be.an('array');\r",
+							"   \r",
+							"})\r",
+							"pm.test('Validar el mensaje que dice que el parametro numCliente es entero', () => {\r",
+							"       pm.expect(body.cantidadOperacionesProcesadas).to.equal(0);\r",
+							"    pm.expect(body.cantidadErrores).to.equal(1);\r",
+							"    pm.expect(body.errores).to.contain(\"El campo 'numCliente' debe ser un número entero en el pedido: PED001\");\r",
+							"   \r",
+							"})\r",
+							"\r",
+							"\r",
+							"   \r",
+							"\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "  {\r\n    \"numCliente\": \"ggggreg\",\r\n    \"codProducto\": \"PROD001\",\r\n    \"codTipoSolicitud\": \"V\",\r\n    \"importe\": 10.000,\r\n    \"esTotal\": false,\r\n    \"idFormaPago\": \"CB\",\r\n    \"idPedido\": \"PED001\",\r\n    \"requiereAutorizacion\": false,\r\n    \"fechaPedido\": \"2024-10-14\",\r\n    \"origen\": \"WEB\"\r\n  }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/api/negocio/v10/insert-pedidos-list",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"negocio",
+						"v10",
+						"insert-pedidos-list"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Test Case:  Validar Importe  invalid date",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const body = pm.response.json();\r",
+							"\r",
+							"pm.test(\"Status code is 400\", () => {\r",
+							"    pm.response.to.have.status(400);\r",
+							"});\r",
+							"pm.test('Validar  campo importe como property', () => {\r",
+							"    pm.expect(body.cantidadOperacionesProcesadas).to.equal(0);\r",
+							"    pm.expect(body.cantidadErrores).to.equal(1);\r",
+							"    pm.expect(body.errores).to.contain(\"El campo 'importe' debe ser un decimal en el pedido: PED001\")\r",
+							"\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "  {\r\n    \"numCliente\": 1205451,\r\n    \"codProducto\": \"PROD001\",\r\n    \"codTipoSolicitud\": \"V\",\r\n    \"importe\":\"trece\",\r\n    \"esTotal\": false,\r\n    \"idFormaPago\": \"CB\",\r\n    \"idPedido\": \"PED001\",\r\n    \"requiereAutorizacion\": false,\r\n    \"fechaPedido\": \"2024-10-14\",\r\n    \"origen\": \"WEB\"\r\n  }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/api/negocio/v10/insert-pedidos-list",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"negocio",
+						"v10",
+						"insert-pedidos-list"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Test Case: Validar  idPedido requerido",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const body = pm.response.json()\r",
+							"\r",
+							"\r",
+							"pm.test(\"Status code is 400\", () => {\r",
+							"    pm.response.to.have.status(400);\r",
+							"});\r",
+							"pm.test('Validar  campo importe como property', () => {\r",
+							"    pm.expect(body.cantidadOperacionesProcesadas).to.equal(0);\r",
+							"    pm.expect(body.cantidadErrores).to.equal(1);\r",
+							"    pm.expect(body.errores).to.contain(\"Faltan los campos: idPedido en el pedido: sin ID\")\r",
+							"\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "  {\r\n    \"numCliente\": 1205451,\r\n    \"codProducto\": \"PROD001\",\r\n    \"codTipoSolicitud\": \"V\",\r\n    \"importe\":1254,\r\n    \"esTotal\": false,\r\n    \"idFormaPago\": \"CB\",\r\n    \"requiereAutorizacion\":true,\r\n    \"origen\": \"WEB\"\r\n  }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/api/negocio/v10/insert-pedidos-list",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"negocio",
+						"v10",
+						"insert-pedidos-list"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
