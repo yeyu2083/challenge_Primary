@@ -11,6 +11,7 @@
 
 ## Prerequisitos
 - Asegúrate de tener **Node.js** y **npm** instalados en tu sistema.
+- Instalar Allure Commandline (ver documentacion)
 - Clonar el repositorio: git clone https://github.com/yeyu2083/challenge_Primary.git
 
 
