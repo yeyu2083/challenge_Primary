@@ -1,6 +1,8 @@
 import requests
 import pytest
 import responses
+import allure
+
 from config import API_URL
 from mock_responses import SUCCESS_RESPONSE, INVALID_FIELDS_RESPONSE
 
@@ -11,12 +13,19 @@ def enable_vcr():
     yield
     responses.stop()
     responses.reset()
+    
+@allure.step("Making an order")    
 def make_order(data):
     try:
         headers = {"Content-Type": "application/json"}
         response = requests.post(f"{API_URL}/orders",json = data, headers=headers)
+        
+        allure.attach(str(data), name="Request Data", attachment_type=allure.attachment_type.JSON)
+        allure.attach(response.text, name="Response Data", attachment_type=allure.attachment_type.JSON)
+      
         return response.json()
     except requests.exceptions.HTTPError as e:
+        allure.attach(str(e), name="Error", attachment_type=allure.attachment_type.TEXT)
         return {"status": "error", "message": str(e)}
     
 
